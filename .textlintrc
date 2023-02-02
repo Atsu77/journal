@@ -1,0 +1,15 @@
+{
+  "plugins": [
+    "latex2e"
+  ],
+  "rules": {
+    "prh": {
+      "rulePaths": [
+        "./prh.yml"
+      ]
+    }
+  },
+  "filters": {
+    "comments": true
+  }
+}
