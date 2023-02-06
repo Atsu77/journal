@@ -313,6 +313,56 @@ These obstacle avoidance vehicle driving information is also transmitted to the 
 % 一定期間ITSスポットに蓄積された，各車両の走行情報を交通管制センターに送信し，交通管制センターで送信された車両走行情報を解析し，後続車に路上障害物情報を提供する．
 The system transmits the vehicle driving information of each vehicle collected at ITS spots for a certain period of time to the traffic control center, which analyzes the transmitted vehicle driving information and provides information about obstacles on the road to following vehicles.
 %
+\subsection{Existing Methodology and Positioning of this Study}
+\label{sec:existing_methodology_and_positioning_of_this_study}
+%
+% 車両走行情報を利用して障害物を検知する既存手法の1つに機械学習を用いる手法\cite{tadokoro}が提案されている．
+One of the existing methods for detecting obstacles using vehicle driving information is the machine learning method \cite{tadokoro}.
+%
+% この検知手法は，第\ref{sec:format_of_vehicle_driving_information}節で示した手順で道路をセル上に分割し，各セルに累積された減速値などの車両走行情報を用いて検知を行う．
+This detection method divides the road into cells according to the procedure described in section \ref{sec:format_of_vehicle_driving_information} and uses the vehicle driving information such as deceleration values accumulated in each cell for detection.
+%
+% 各セルに，路上障害物の有無について正解ラベルをつけ，教師あり学習を行いモデルを作成する．
+Each cell is labeled with the correct answer for the presence or absence of roadblocks, and a model is created through supervised learning.
+%
+% 作成したモデルに，ラベルが与えられていないセルに累積されている車両走行情報を入力として与え，障害物を検知する手法である．
+This method detects obstacles by providing the model with the vehicle running information accumulated in unlabeled cells as input.
+%
+% これは，事前にITSスポットに集積された正常・異常データを用いて障害物検知モデルを構築している．
+The obstacle detection model is constructed using normal and abnormal data accumulated at ITS spots in advance.
+%
+% しかし，この手法では，異常データを用いて学習を行う必要があり，路上障害物の有無について正解ラベルを人手でつけることは困難である．
+However, this method requires training on anomaly data, and it is difficult to manually assign correct labels for the presence or absence of roadblocks.
+%
+% また，交通流は季節や時間帯など変化が激しいため，モデルを頻繁に更新する必要がある．
+In addition, the model needs to be updated frequently because traffic flows are subject to rapid changes, such as seasonality and time of day.
+%
+% その際には，様々な環境における異常データを揃えモデルを作り直すことが必要となる．
+In such cases, it is necessary to rework the model by aligning anomaly data in various environments.
+%
+\par
+%
+% そこで本研究では，絶えず変化する交通流に対応した障害物検知モデルを作成する手法を提案する．
+Therefore, this study proposes a method to create an obstacle detection model that responds to constantly changing traffic flow.
+%
+% 教師なし異常検知のアルゴリズムに，One Class SVM\cite{chen2001one}やIsolation Forest\cite{Isolationforest}，Autoencoder\cite{bank2021autoencoders}など様々な手法が提案されている．
+Various methods have been proposed for unsupervised anomaly detection algorithms, such as One Class SVM \cite{chen2001one}, Isolation Forest \cite{Isolationforest}, and Autoencoder \cite{bank2021autoencoders}.
+%
+% Autoencoderは，入力されたデータを出力先のノードの数を減らすことによって，データを一度次元圧縮し，重要な特徴量だけを残した後，再度もとの次元に復元処理をするアルゴリズムである．
+Autoencoder is an algorithm that compresses the input data once by reducing the number of nodes in the output node, preserves only the important features, and restores the original dimension.
+%
+% この特徴から，Autoencoderはデータのノイズ除去や異常検知に用いられている．
+Because of this feature, Autoencoder is used for data denoising and anomaly detection.
+%
+% 異常検知としては，正常データのみを学習させ，異常データが入力された場合，正常データを入力した場合よりも再構成誤差が大きくなるため，その誤差を読み取り異常検知を行うことが可能である．
+For abnormality detection, only normal data is trained, and when abnormal data is input, the reconstruction error is larger than when normal data is input, so the error can be read to detect abnormalities.
+%
+% 加えてデータの異常箇所も特定可能であり，宇宙機の異常検知\cite{sakurada}や災害時の被害状況を把握するシステム\cite{kinami}の提案もされている．
+In addition, it can also identify anomalies in the data, and has been proposed as a spacecraft anomaly detection system \cite{sakurada} and a disaster damage assessment system \cite{kinami}.
+%
+% 本研究では，正常データのみでの学習と，異常箇所の特定という観点からアルゴリズムにAutoencoderを採用する．
+In this study, we adopt Autoencoder as the algorithm from the viewpoint of learning with normal data only and identifying anomalies.
+%
 
 
 \bibliographystyle{ieicetr}% bib style
