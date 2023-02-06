@@ -390,6 +390,115 @@ For these reasons, we propose a road obstacle detection method using Autoencoder
 %
 \par
 %
+\subsection{Method}
+\label{sec:method}
+%
+% Autoencoderを用いた，障害物検知モデル作成の手順について説明する．
+This section describes the procedure for creating obstacle detection models using Autoencoder.
+%
+% Autoencoderに入力されるデータは式(\ref{eq:cumulative_value})で定義された減速値の積分$A_{x,y}[T_1,T_2]$である．
+The data input to Autoencoder is the integral $A_{x,y}[T_1,T_2]$ of the deceleration value defined by equation (\ref{eq:formatted_data}).
+%
+% Autoencoderは入力$A_{x,y}[T_1,T_2]$をエンコーダを通して一度圧縮し，デコーダを通して復元し，出力として入力の再構成後の値$\hat{A}_{x, y}[T_1,T_2]$を得る．
+Autoencoder compresses the input $A_{x,y}[T_1,T_2]$ once through the encoder, restores it through the decoder, and obtains the input reconstruction value $\hat{A}_{x, y}[T_1,T_2]$ as output.
+%
+% $Enc$をエンコーダ，$Dec$をデコーダとすると，Autoencoderの再構成後の値は式(\ref{eq:autoencoder})で表される．
+If $Enc$ is the encoder and $Dec$ is the decoder, the reconstructed value of Autoencoder is represented by the expression (\ref{eq:autoencoder}).
+%
+\begin{equation}
+  \label{eq:autoencoder}
+  \hat{A}_{x, y}\left[T_1, T_2\right]=Dec\left(Enc\left(A_{x, y}\left[T_1, T_2\right]\right)\right)
+\end{equation}
+%
+%
+% その時，Autoencoderの入力$A_{x, y}[T_1,T_2]$と出力$\hat{A}_{x, y}[T_1,T_2]$を比較し，モデルパラメータを調節されモデルが構築される．
+Then, Autoencoder compares the input $A_{x, y}[T_1,T_2]$ and output $\hat{A}_{x, y}[T_1,T_2]$, adjusts model parameters, and constructs the model.
+%
+\par
+%
+Figure \ref{fig:detection_algorithm} is used to illustrate the learning and detection by Autoencoder.
+%
+% 今，時刻$t$において検知を行うことを考え，$T_{train}$を学習，$T_{test}$を検知のための計測時間，$T_{lag}$を学習期間と検知期間の調整を行うためのパラメータとする．
+Now, considering detection at time $t$, let $T_{train}$ be the training period, $T_{test}$ be the measurement time for detection, and $T_{lag}$ be a parameter to adjust the training and detection periods.
+%
+% まず，時間区間$[t-T_{lag}-T_{train},t-T_{lag}]$における減速値の積分$A_{x,y}[t-T_{lag}-T_{train},t-T_{lag}]$を用いて，Autoencoderの学習を行う．
+First, Autoencoder is trained using the integral $A_{x,y}[t-T_{lag}-T_{train},t-T_{lag}]$ of the deceleration value in the time interval $[t-T_{lag}-T_{train},t-T_{lag}]$.
+%
+% ここで，$A_{x,y}[t-T_{lag}-T_{train},t-T_{lag}]$を正常データとする．
+Let $A_{x,y}[t-T_{lag}-T_{train},t-T_{lag}]$ be the normal data.
+%
+% Autoencoderは正常データにより学習されているため，モデルは正常データによる学習に基づくものを復元する．
+Since Autoencoder is trained on normal data, the model restores the one based on training on normal data.
+%
+% $A_{x,y}[t-T_{test},t]$が正常データと異なる挙動パターンであった場合，正しく復元できないセルが存在する．
+If $A_{x,y}[t-T_{test},t]$ has a different behavior pattern from the normal data, there are cells that cannot be recovered correctly.
+%
+Therefore, it is possible to estimate the presence of an obstacle in that cell because the difference between the input and output will be larger.
+%
+% Autoencoderの入力と出力の差を再構成誤差とし，以下の式で定義する．
+The difference between the input and output of Autoencoder is the reconstruction error defined by the following equation.
+%
+\begin{equation}
+  \Delta A_{x,y}[T_1,T_2]=\abs{A_{x,y}[T_1,T_2]-\hat{A}_{x,y}[T_1,T_2]}^{2}
+  \label{eq:reconstitute_error}
+\end{equation}
+%
+%
+\par
+% 障害物の発生を判別する閾値の設定には再構成誤差$\Delta A_{x,y}[T_1,T_2]$の統計量として
+%\begin{align}
+%  \mu[T_1,T_2]    & = \E_{x,y}\{\Delta A_{x,y}[T_1,T_2]\}  \\
+%  \sigma[T_1,T_2] & = \SD_{x,y}\{\Delta A_{x,y}[T_1,T_2]\}
+%\end{align}
+%を用いる．
+\begin{align}
+  \mu[T_1,T_2]    & = \E_{x,y}\{\Delta A_{x,y}[T_1,T_2]\}  \\
+  \sigma[T_1,T_2] & = \SD_{x,y}\{\Delta A_{x,y}[T_1,T_2]\}
+\end{align}
+%
+is used as the statistic of the reconstruction error $\Delta A_{x,y}[T_1,T_2]$ to set the threshold for discriminating the occurrence of obstacles.
+%
+% ここで，$\E\{\cdot\}$は期待値，$\SD\{\cdot\}$は標準偏差を意味する．
+$\E\{\cdot\}$ means the expected value and $\SD\{\cdot\}$ means the standard deviation.
+%
+% これは，学習データは正常データであるため，出力は学習データの平均と標準偏差によって決定される信頼区間において信頼度を規定可能であるためである．
+This is because the training data are normal data, so the outputs can be specified with confidence intervals determined by the mean and standard deviation of the training data.
+%
+% 時刻$t$において，第$y$車線，第$x$番目のセルに真に障害物が存在する場合を$d_{x, y}(t)=1$，存在しない場合を$d_{x, y}(t)=0$と表す．
+At time $t$, we denote the presence of a true obstacle in the $y$-th lane and $x$-th cell by $d_{x, y}(t)=1$ and its absence by $d_{x, y}(t)=0$.
+%
+% また，再構成誤差の平均$\mu[T_1,T_2]$，標準偏差$\sigma[T_1,T_2]$と，閾値の決定するパラメータ$n$を導入し，時刻$t$で障害物の有無の判別を行う方法を以下の式で定義する．
+Also, introducing the mean $\mu[T_1,T_2]$ and standard deviation $\sigma[T_1,T_2]$ of the reconstruction error and the parameter $n$ to determine the threshold value, we define a method to determine the presence or absence of obstacles at time $t$ using the following formula.
+%
+\begin{equation}
+  \hat{d}_{x,y}(t) =
+  \begin{cases}
+    0, (\Delta{A}_{x,y}[t-T_{test},t] & < \mu[t-T_{test},t]      \\
+                                      & + n\sigma[t-T_{test},t]) \\
+    1, (\Delta{A}_{x,y}[t-T_{test},t] & \geq \mu[t-T_{test},t]   \\
+                                      & + n\sigma[t-T_{test},t]) \\
+  \end{cases}
+  \label{eq:discrimination}
+\end{equation}
+%
+% つまり，図\ref{fig:detection_algorithm}のように，再構成誤差の平均$\mu[T_1,T_2]$と標準偏差$\sigma[T_1,T_2]$を用いて，閾値を設定し，再構成誤差$\Delta A_{x,y}[T_1,T_2]$が閾値を超えた場合に障害物が存在すると判別する．
+In other words, as shown in Figure\ref{fig:detection_algorithm}, a threshold is set using the mean $\mu[T_1,T_2]$ and standard deviation $\sigma[T_1,T_2]$ of the reconstruction error, and an obstacle is identified when the reconstruction error $\Delta A_{x,y}[T_1,T_2]$ exceeds the threshold value. The obstacle is detected when the reconstruction error $\Delta A_{x,y}[T_1,T_2]$ exceeds the threshold value.
+%
+\begin{figure}[tb]
+  \centering
+  \includegraphics[scale=0.42]{detection_algorithm.pdf}
+  \caption{Detection algorithm}
+  \label{fig:detection_algorithm}
+\end{figure}
+%
+\begin{figure}[tb]
+  \begin{center}
+    \includegraphics[width=1.0\linewidth]{threshold_judgment.pdf}
+  \end{center}
+  \caption{Detection of obstacles by threshold}
+  \label{fig:threshold_judgment}
+\end{figure}
+%
 %
 % 本研究では，正常データのみでの学習と，異常箇所の特定という観点からアルゴリズムにAutoencoderを採用する．
 In this study, we adopt Autoencoder as the algorithm from the viewpoint of learning with normal data only and identifying anomalies.
