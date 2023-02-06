@@ -464,3 +464,5 @@ dist
 .textlintcache
 
 *.pdf
+
+*.pptx
