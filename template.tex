@@ -220,6 +220,34 @@ Each road administrator can collect vehicle driving information for each road fr
   \label{fig:configuration_of_the_probe_system}
 \end{figure}
 %
+\subsection{Format of vehicle driving information}
+\label{sec:format_of_vehicle_driving_information}
+%
+% 本稿では，車両走行情報の扱いを簡単にするため，図\ref{fig:format_of_vehicle_driving_information}に示すように，道路を20 m単位のセル上に分割し，各セルを通過した車両走行情報を集計した．
+In this thesis, to simplify the handling of vehicle driving information, the road is divided into cells of 20 m units and the vehicle driving information that passed through each cell is aggregated, as shown in Figure\ref{fig:format_of_vehicle_driving_information}.
+%
+\begin{figure}[tb]
+  \begin{center}
+    \includegraphics[width=1.0\linewidth]{data_preprocessing.pdf}
+  \end{center}
+  \caption{Data Preprocessing}
+  \label{fig:data_preprocessing}
+\end{figure}
+%
+% 計算の手順について説明する．
+The calculation procedure is explained below.
+%
+% まず，時刻$t$における第$x$番目のセル，第$y$車線を通過した第$m$番目の車両の減速値を$a_{x, y}^{(m)}(t)$とする．
+First, let $a_{x, y}^{(m)}(t)$ be the deceleration value of the $m$-th vehicle passing through the $x$-th cell, $y$-th lane at time $t$.
+%
+% 続いて，通過した車両の減速度の総和を計算し，時刻$T_1$から時刻$T_2$において，積分した各セルの減速度を$A_{x, y}[T_1, T_2]$とし，以下の式で定義する．
+The sum of the deceleration of the passing vehicles is then computed and the integrated deceleration of each cell from time $T_1$ to time $T_2$ is defined as $A_{x, y}[T_1, T_2]$ with the following formula
+%
+\begin{equation}
+  A_{x, y}[T_1,T_2]=\displaystyle\sum_{m}\int_{T_1}^{T_2} a_{x,y}^{(m)}(t)dt
+  \label{eq:formatted_data}
+\end{equation}
+%
 
 
 \bibliographystyle{ieicetr}% bib style
