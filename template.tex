@@ -248,6 +248,28 @@ The sum of the deceleration of the passing vehicles is then computed and the int
   \label{eq:formatted_data}
 \end{equation}
 %
+\subsection{Heat map of deceleration values}
+\label{seq:heat_map_of_deceleration_values}
+%
+% 図\ref{fig:deceleration_heatmap}はそれぞれ路上障害物が中央車線の500 m地点にあり，減速値と式(\ref{eq:cumulative_value})に基づき算出しヒートマップを図示したものである．
+Figure \ref{fig:deceleration_heatmap} shows the heatmap calculated based on the deceleration value and the formula (\ref{eq:cumulative_value}) with the road obstacle located at 500 m in the middle lane, respectively.
+%
+% 図より，路上障害物の手前のセルにおいて減速の傾向があることが確認できる．
+The figure shows that there is a tendency to decelerate in the cell in front of the roadside obstacle.
+%
+% これは，路上障害物を検知した車両が減速することで，衝突を回避するための挙動である．
+This behavior is intended to avoid a collision by slowing down the vehicle when it detects a roadside obstacle.
+%
+% したがって，路上障害物の発生箇所および，減速値は相関があり，検知に有効である可能性がある．
+Therefore, the location of obstacles on the road and the deceleration value are correlated and can effective for detection.
+%
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=1.0\linewidth]{deceleration_heatmap.pdf}
+  \label{fig:deceleration_heatmap}
+  \caption{Deceleration heat map}
+\end{figure}
+%
 
 
 \bibliographystyle{ieicetr}% bib style
