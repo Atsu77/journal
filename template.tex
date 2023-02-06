@@ -91,9 +91,6 @@ Based on vehicle driving information transmitted from ETC2.0 to ITS spots, the s
   \label{fig:itsspot_location}
 \end{figure}
 %
-% ETC2.0からITSスポットに送信された車両走行情報に基づいて，道路の状況を把握し，ドライバーに運転支援のための様々なサービスを提供する．
-Based on vehicle driving information transmitted from ETC2.0 to ITS spots, the system monitors road conditions and provides various driving assistance services to the driver.
-%
 \par
 %
 % ETC2.0から提供されるサービスとして路上障害物情報がある．
@@ -505,17 +502,94 @@ In other words, as shown in Figure\ref{fig:detection_algorithm}, a threshold is 
 % 本節では，交通流シミュレーターSUMOから得られた車両走行情報を用いて障害物検知実験を行った結果を説明する．
 This section describes the results of an obstacle detection experiment using vehicle travel information obtained from the SUMO traffic flow simulator.
 %
+\subsection{Simulation Environment}
+\label{sec:simulation_environment}
 %
-% 本研究では，正常データのみでの学習と，異常箇所の特定という観点からアルゴリズムにAutoencoderを採用する．
-In this study, we adopt Autoencoder as the algorithm from the viewpoint of learning with normal data only and identifying anomalies.
+% 本実験では，\ref{sec:traffic_flow_model}章で説明した，車両モデルを用いた．
+In this experiment, we used the vehicle model described in chapter \ref{sec:traffic_flow_model}.
 %
-
+\par
+%
+% また，道路モデルは通常の道路に加えて，合流区間を設けた道路とサグ部を設けた道路の3種類を用いた．
+In addition to regular roads, three types of road models were used: roads with merging sections and roads with sag sections.
+%
+% 合流区間は自車より前に合流する車両が存在する場合，減速する車両が増加することが予測される．
+In a merging section, the number of vehicles decelerating is expected to increase when there is a vehicle merging in front of the vehicle's own vehicle.
+%
+% サグ部は上り勾配に差し掛かった車両が勾配を上るために減速することが予測される．
+In the sag section, vehicles approaching an uphill grade are expected to decelerate in order to climb the grade.
+%
+% 以上の理由から，これらの道路モデルは慢性的に車両の減速が発生するため誤検知を増加させる可能性があり，手法の道路環境に対する適応性を検証するのに適している．
+For these reasons, these road models may increase false positives due to chronic vehicle deceleration and are suitable for validating the adaptability of the method to the road environment.
+%
+%よって，これらの道路モデルを用いて，既存手法と提案手法の検知性能を比較し，提案手法の有効性を検証する．
+Therefore, using these road models, we compare the detection performance of the conventional and proposed methods and verify the effectiveness of the proposed method.
+%
+\par
+%
+\subsection{Experimental data}
+\label{sec:experimental_data}
+%
+% 本実験で用いた，既存手法と提案手法の学習データとテストデータについて説明する．
+This section describes the training and test data for the existing and proposed methods used in this experiment.
+%
+% 既存手法は教師あり学習のため，事前にどのセルにも障害物が発生していない正常データと，障害物がいずれかのセルに一つ発生している異常データを各100セット用意した．
+Since the conventional method is based on supervised learning, 100 sets of normal data with no obstacles in any cell and 100 sets of abnormal data with one obstacle in any cell were prepared in advance.
+%
+% これらのデータには，障害物の有無に応じた正解ラベルが付与されている．
+These data are labeled with the correct answer according to the presence or absence of obstacles.
+%
+% 提案手法は教師なし学習のため，検知する時刻よりも$T_{lag}$秒前の状況をもとに学習を行う．
+Since the proposed method is unsupervised learning, it learns based on the situation $T_{lag}$ seconds before the time of detection.
+%
+% これらのデータには，障害物の有無に応じた正解ラベルが付与されていない．
+These data are not labeled with correct answers according to the presence or absence of obstacles.
+%
+% テストデータは，障害物が発生した場合に，障害物が発生したセルを検知できるかを評価するため，障害物発生時の100 s後の状況をもとに評価を行う．
+The test data is evaluated based on the situation 100 s after the occurrence of the obstacle in order to evaluate whether the system can detect the cell in which the obstacle occurred.
+%
+% 障害物が発生するセルは，評価区間のいずれかのセルにランダムに発生するように設定した．
+The cells in which obstacles were generated were set to occur randomly in one of the cells in the evaluation interval.
+%
+\par
+%
+\subsection{Evaluation index}
+\label{sec:evaluation_index}
+%
+% 評価指標には，AUC (Area Under the Curve) を用いる．
+AUC (Area Under the Curve) is used as the evaluation index.
+%
+% AUCはROC (Receiver Operating Characteristic) 曲線に囲まれた部分の面積であり，0から1までの値をとり，値が1に近いほど判別性能が高い．
+AUC is the area surrounded by the ROC (Receiver Operating Characteristic) curve and takes values from 0 to 1.
+%
+The closer the value is to 1, the higher the discrimination performance.
+%
+% ROC曲線は，各閾値について，縦軸にTrue Positive Rate，横軸にFalse Positive Rateをとるグラフである．
+%
+The ROC curve is a graph with the True Positive Rate on the vertical axis and the False Positive Rate on the horizontal axis for each threshold value.
+%
+% Recallは，障害物がある場合に検知できた割合，False Positive Rateは，障害物がない場合に誤検知した割合である．
+%
+Recall is the proportion of the cases in which the obstacle was detected.
+%
+False Positive Rate is the proportion of the cases in which the obstacle was falsely detected when there was no obstacle.
+%
+% また，障害物ありの正解範囲は，図\ref{fig:extended_detection_range}に示すように障害物の発生箇所から前方$100 \mathrm{m}$ 以内の範囲を検知できるかどうかの精度を計算する．
+The accuracy of the correct detection range for the presence of obstacles is calculated as whether or not the range within $100 \mathrm{m}$ in front of the point of occurrence of the obstacle can be detected, as shown in Figure\ref{fig:correct_detection_range}.
+%
+\begin{figure}[tb]
+  \begin{center}
+    \includegraphics[width=1.0\linewidth]{correct_detection_range.pdf}
+  \end{center}
+  \caption{Correct detection range}
+  \label{fig:correct_detection_range}
+\end{figure}
 
 \bibliographystyle{ieicetr}% bib style
 \bibliography{myRef}% your bib database
-\begin{thebibliography}{99}% more than 9 --> 99 / less than 10 --> 9
-\bibitem{}
-\end{thebibliography}
+%\begin{thebibliography}{99}% more than 9 --> 99 / less than 10 --> 9
+%\bibitem{}
+%\end{thebibliography}
 
 %\profile{}{}
 %\profile*{}{}% without picture of author's face
