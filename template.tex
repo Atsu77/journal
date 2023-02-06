@@ -15,7 +15,15 @@
 \usepackage[fleqn]{amsmath}
 \usepackage{newtxtext}
 \usepackage[varg]{newtxmath}
-
+%
+% 数式の表記に利用
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+\DeclareMathOperator*{\E}{E}
+\DeclareMathOperator*{\SD}{SD}
+\DeclareMathOperator*{\var}{var}
+%
+\graphicspath{{./figure/}}
+%
 \setcounter{page}{1}
 %\breakauthorline{}% breaks lines after the n-th author
 
@@ -23,11 +31,13 @@
 %\SpecialIssue{}
 %\SpecialSection{}
 %\theme{}
-\title{}
+\title[Road Obstacle Detection by Autoencoder]{Road Obstacle Detection by Autoencoder Using Vehicle Driving Information}
 %\title[title for header]{title}
 %\titlenote{}
 \authorlist{%
- \authorentry{}{}{}\MembershipNumber{}
+%
+ \authorentry{Atsuhide YAMANE}{}{}\MembershipNumber{}
+ \authorentry{Masahiro FUJII}{}{}\MembershipNumber{}
 % \authorentry{name}{membership}{affiliate label}\MembershipNumber{}
 % \authorentry{name}{membership}{affiliate label}[present affiliate label]\MembershipNumber{}
 % \authorentry[e-mail address]{name}{membership}{affiliate label}\MembershipNumber{}
@@ -46,11 +56,12 @@
 
 \begin{document}
 \maketitle
+
 \begin{summary}
 
 \end{summary}
 \begin{keywords}
-
+  ITS, ETC, Obstacle detection, Unsupervised learning
 \end{keywords}
 
 \section{}
