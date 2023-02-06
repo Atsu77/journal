@@ -15,6 +15,7 @@
 \usepackage[fleqn]{amsmath}
 \usepackage{newtxtext}
 \usepackage[varg]{newtxmath}
+\usepackage{url}
 %
 % 数式の表記に利用
 \newcommand{\abs}[1]{\left\lvert#1\right\rvert}
@@ -183,7 +184,7 @@ It is recorded when either the front/rear acceleration, left/right acceleration,
 % よって，路上障害物発生に伴う車両の減速により記録される挙動履歴のデータを用いて，車両の走行状況を把握し，路上障害物検知が可能であると考えられる．
 Therefore, it is considered possible to detect obstacles on the road by using the data of the behavior history recorded by the vehicle's deceleration due to the occurrence of obstacles on the road to understand the vehicle's driving conditions.
 %
-\begin{table}[tpb]
+\begin{table}[tb]
   \caption{Behavior history thresholds}
   \label{tab:behavior_history_threshold}
   \begin{center}
@@ -346,7 +347,7 @@ In such cases, it is necessary to rework the model by aligning anomaly data in v
 Therefore, this study proposes a method to create an obstacle detection model that responds to constantly changing traffic flow.
 %
 % 教師なし異常検知のアルゴリズムに，One Class SVM\cite{chen2001one}やIsolation Forest\cite{Isolationforest}，Autoencoder\cite{bank2021autoencoders}など様々な手法が提案されている．
-Various methods have been proposed for unsupervised anomaly detection algorithms, such as One Class SVM \cite{chen2001one}, Isolation Forest \cite{Isolationforest}, and Autoencoder \cite{bank2021autoencoders}.
+Various methods have been proposed for unsupervised anomaly detection algorithms, such as One Class SVM \cite{chen2001one}, Isolation Forest \cite{isolationforest}, and Autoencoder \cite{bank2021autoencoders}.
 %
 % Autoencoderは，入力されたデータを出力先のノードの数を減らすことによって，データを一度次元圧縮し，重要な特徴量だけを残した後，再度もとの次元に復元処理をするアルゴリズムである．
 Autoencoder is an algorithm that compresses the input data once by reducing the number of nodes in the output node, preserves only the important features, and restores the original dimension.
