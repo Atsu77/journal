@@ -317,8 +317,8 @@ These obstacle avoidance vehicle driving information is also transmitted to the 
 % 一定期間ITSスポットに蓄積された，各車両の走行情報を交通管制センターに送信し，交通管制センターで送信された車両走行情報を解析し，後続車に路上障害物情報を提供する．
 The system transmits the vehicle driving information of each vehicle collected at ITS spots for a certain period of time to the traffic control center, which analyzes the transmitted vehicle driving information and provides information about obstacles on the road to following vehicles.
 %
-\subsection{Existing Methodology and Positioning of this Study}
-\label{sec:existing_methodology_and_positioning_of_this_study}
+\subsection{Conventional Methodology and Positioning of this Study}
+\label{sec:conventional_methodology_and_positioning_of_this_study}
 %
 % 車両走行情報を利用して障害物を検知する既存手法の1つに機械学習を用いる手法\cite{tadokoro}が提案されている．
 One of the existing methods for detecting obstacles using vehicle driving information is the machine learning method \cite{tadokoro}.
@@ -338,8 +338,8 @@ The obstacle detection model is constructed using normal and abnormal data accum
 % しかし，この手法では，異常データを用いて学習を行う必要があり，路上障害物の有無について正解ラベルを人手でつけることは困難である．
 However, this method requires training on anomaly data, and it is difficult to manually assign correct labels for the presence or absence of roadblocks.
 %
-% また，交通流は季節や時間帯など変化が激しいため，モデルを頻繁に更新する必要がある．
-In addition, the model needs to be updated frequently because traffic flows are subject to rapid changes, such as seasonality and time of day.
+% また，交通流は季節や時間帯など変化が激しく，車両走行情報の分布も変化するため，モデルの検知精度が低下する可能性がある．
+In addition, the model's detection accuracy can be degraded because traffic flow is highly variable, such as season and time of day, and the distribution of vehicle travel information is also subject to change.
 %
 % その際には，様々な環境における異常データを揃えモデルを作り直すことが必要となる．
 In such cases, it is necessary to rework the model by aligning anomaly data in various environments.
@@ -361,8 +361,35 @@ Because of this feature, Autoencoder is used for data denoising and anomaly dete
 % 異常検知としては，正常データのみを学習させ，異常データが入力された場合，正常データを入力した場合よりも再構成誤差が大きくなるため，その誤差を読み取り異常検知を行うことが可能である．
 For abnormality detection, only normal data is trained, and when abnormal data is input, the reconstruction error is larger than when normal data is input, so the error can be read to detect abnormalities.
 %
-% 加えてデータの異常箇所も特定可能であり，宇宙機の異常検知\cite{sakurada}や災害時の被害状況を把握するシステム\cite{kinami}の提案もされている．
-In addition, it can also identify anomalies in the data, and has been proposed as a spacecraft anomaly detection system \cite{sakurada} and a disaster damage assessment system \cite{kinami}.
+\par
+%
+% 路上障害物の発生のような，まれにしか発生しない外れ値がある場合，外れ値を無視するか，外れ値を除外し別途学習しないと，モデルの汎化性能が低下する．
+Rare outliers like obstacle occurrences can harm a model's performance unless handled properly, such as ignoring or learning them separately.
+%
+% Autoencoderを用いると，次元削減によって外れ値を検出することができるため，正常値と外れ値を分けて処理ができる．
+Autoencoder allows outliers to be detected by dimensionality reduction, so normal values and outliers can be processed separately.
+%
+% また，交通流のような時間帯によって変動するデータでは，予測対象のデータが，学習時のデータとは異なる場合がある．
+In addition, for data that varies with time, such as traffic flow, the data to be predicted may differ from the data at the time of training.
+%
+% このような場合，現在のデータをより良く表したデータを使用して再学習しなければならない．
+In such cases, the data must be re-trained using data that better represents the current data.
+%
+% Autoencoderを用いてモデルを構築すれば，現在のデータが学習データと一致しているか判定することができる．
+If the model is built using Autoencoder, it can determine if the current data matches the training data.
+%
+% もし，相違がある場合は，再学習を行うこともできる．
+If there is a difference, then the current data must be relearned using a better representation.
+If there is a discrepancy, it can be re-trained.
+%
+% 実際には，宇宙機の異常検知\cite{sakurada}や災害時の被害状況を把握するシステム\cite{kinami}もAutoencoderを用いて提案されている．
+In fact, the spacecraft anomaly detection system \cite{sakurada} and the disaster damage assessment system \cite{kinami} have also been proposed using Autoencoder.
+%
+% 以上の理由から本研究では，Autoencoderを用いた路上障害物検知手法を提案する．
+For these reasons, we propose a road obstacle detection method using Autoencoder.
+%
+\par
+%
 %
 % 本研究では，正常データのみでの学習と，異常箇所の特定という観点からアルゴリズムにAutoencoderを採用する．
 In this study, we adopt Autoencoder as the algorithm from the viewpoint of learning with normal data only and identifying anomalies.
