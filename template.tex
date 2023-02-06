@@ -159,6 +159,67 @@ Each vehicle was assumed to be 3.5 m long, have a maximum speed of 100 km/h, and
 % 前提として，すべての車両はETC2.0車載器を搭載し，評価区間内のすべての車両の車両走行情報を取得できるものとする．
 All vehicles are assumed to be equipped with ETC2.0 onboard equipment capable of acquiring vehicle travel information.
 %
+\subsection{Overview of Vehicle Driving Information}
+\label{sec:overview_of_vehicle_driving_information}
+%
+% 車両走行情報は一般財団法人道路新産業開発機構で規定されてい車載器仕様に沿ったものとなっている．
+The vehicle driving information is in accordance with the OBE specifications defined by the New Road Industry Development Organization\cite{probdata_format}.
+%
+% この仕様によると，車両走行情報は主に走行履歴 (時刻，経度緯度)，挙動履歴 (前後加速度，左右加速度，ヨー角速度)で構成される\cite{probdata_format}．
+According to this specification, vehicle running information mainly consists of running history and behavior history.
+%
+\par
+%
+% 走行履歴は，車両の位置 (緯度・経度)，時刻，道路種別等のデータであり，前回記録した地点から200 m走行時または進行方位が45度以上変動した時点で記録される．
+The driving history is data such as the vehicle's position (latitude and longitude), time, and road type.
+%
+It is recorded when the vehicle has traveled 200 m from the last recorded point or when its direction of travel has changed by 45 degrees or more.
+%
+% 挙動履歴は，車両の位置 (緯度・経度)，方位，道路種別，前後加速度，左右加速度，ヨー角速度のデータであり，前後加速度，左右加速度，ヨー角速度のいずれかが表\ref{tab:behavior_history_threshold}に示す閾値を超えたときに記録される．
+The behavior history consists of the vehicle's position (latitude and longitude), direction, road type, front/rear acceleration, left/right acceleration, and yaw angular velocity data.
+%
+It is recorded when either the front/rear acceleration, left/right acceleration, or yaw angular velocity exceeds the threshold value shown in table \ref{tab:behavior_history_threshold}.
+%
+% よって，路上障害物発生に伴う車両の減速により記録される挙動履歴のデータを用いて，車両の走行状況を把握し，路上障害物検知が可能であると考えられる．
+Therefore, it is considered possible to detect obstacles on the road by using the data of the behavior history recorded by the vehicle's deceleration due to the occurrence of obstacles on the road to understand the vehicle's driving conditions.
+%
+\begin{table}[tpb]
+  \caption{Behavior history thresholds}
+  \label{tab:behavior_history_threshold}
+  \begin{center}
+  \begin{tabular}{c|c}
+    data item & threshold                   \\ \hline \hline
+    front/rear acceleration [$\mathrm{G}$] & $-0.25$      \\ \hline
+    left/right acceleration [$\mathrm{G}$] & $\pm0.25$    \\ \hline
+    yaw angular velocity [$\mathrm{deg/s}$]& $\pm8.5$ \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+%
+\par
+%
+% ETC 2.0車載器では，GPS，加速度センサ，ジャイロセンサを用いて車両走行情報を収集する．
+ETC 2.0 on-board equipment collects vehicle driving information using GPS, acceleration sensors, and gyro sensors.
+%
+% 車両がITSスポットの通信領域(アンテナから手前約20 mから30 m) を通過する際に送信され，送信された車両走行情報は，ETC 2.0車載器から破棄される．
+The information is transmitted when the vehicle passes through the communication area of the ITS Spot (approximately 20 m to 30 m in front of the antenna).
+%
+% 車両走行情報を収集するシステムは図\ref{fig:configuration_of_the_probe_system}に示すように，ETC 2.0車載器とITSスポット，車両走行情報の収集・集計・管理を行うプローブサーバから構成される．
+The transmitted vehicle travel information is discarded by the ETC 2.0 on-board equipment.
+%
+As shown in Figure \ref{fig:configuration_of_the_probe_system}, the system for collecting vehicle driving information consists of ETC 2.0 on-board units, ITS spots, and probe servers that collect, aggregate, and manage vehicle driving information.
+%
+% 各道路の管理者はプローブサーバーから，各道路の車両走行情報を収集することができる．
+Each road administrator can collect vehicle driving information for each road from a probe server.
+%
+\begin{figure}[tb]
+  \begin{center}
+    \includegraphics[width=1.0\linewidth]{configuration_of_the_probe_system.pdf}
+  \end{center}
+  \caption{Configuration of the probe system}
+  \label{fig:configuration_of_the_probe_system}
+\end{figure}
+%
 
 
 \bibliographystyle{ieicetr}% bib style
