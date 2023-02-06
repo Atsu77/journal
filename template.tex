@@ -123,6 +123,21 @@ This is expected to prevent the degradation of detection performance.
 % そこで，本稿でETC2.0とITSスポットを介して取得された車両走行情報を用いて障害物検知を行う手法を提案し，既存手法と提案手法の検知性能を比較する．
 Therefore, we propose a method for obstacle detection using vehicle driving information collected via ETC2.0 and ITS spots.
 %
+\section{Traffic flow model}
+\label{sec:traffic_flow_model}
+%
+% 障害物検知のシステムの実用化のためには，実環境での検証が必要である．
+To put a road obstacle detection system into practical use, it is necessary to verify the system in a real environment.
+%
+% しかし，路上障害物を実道路上に放置することを想定する実証検証は実験のための場所や設備の確保，費用が多大になり，実現が困難である．
+However, it is difficult to realize a verification test that assumes that roadside obstacles are left on the actual road because of the large cost of securing a location and facilities for the test.
+%
+% そこで，本研究では交通流シミュレータ SUMO (Simulation of Urban Mobility)を使用して検証を行う.
+Therefore, in this thesis, the traffic flow simulator SUMO (Simulation of Urban Mobility) \cite{sumo} is used for verification.
+%
+% SUMOとはドイツ航空宇宙センターの輸送システム研究所で作成されたオープンソースのシミュレータであり,各車両の減速値や車線変更などの車両走行情報を取得できる.
+SUMO is an open-source simulator created by the Institute of Transportation Systems at the German Aerospace Center.
+%
 
 
 \bibliographystyle{ieicetr}% bib style
