@@ -64,7 +64,65 @@
   ITS, ETC, Obstacle detection, Unsupervised learning
 \end{keywords}
 
-\section{}
+\section{Introduction}
+\label{sec:introduction}
+%
+% 近年，ETC (Electronic Toll Collection System) 2.0と呼ばれる，道路上に設置されるITS (Intelligent Transport Systems) スポットを通じ様々な情報サービスを提供するシステムが普及している．
+In recent years, ETC (Electronic Toll Collection system) 2.0, which provides various information services through ITS (Intelligent Transport Systems) spots installed on highways, has become popular.
+%
+% ETC2.0は，車両の位置や加速度，車線変更情報などの車両走行情報を取得し，全国の高速道路上のITSスポットに送信する．
+ETC2.0 collects vehicle driving information, such as vehicle position, acceleration, and lane change information, and transmits it to ITS spots on highways throughout Japan.
+%
+% ITSスポットとは，道路交通情報を提供するサービスであり，従来使用されてきた光ビーコンや電波ビーコンにとって代わる路側機である\cite{itsspot}．
+ITS spot is a service that provides road traffic information and is a roadside device that replaces the optical and radio beacons that have been used in the past\cite{itsspot}.
+%
+% 図\ref{fig:itsspot_location}に示すように，日本全国の高速道路に設置されており\cite{etc2.0Location}，都市内の高速道路では約4 km間隔，都市間の高速道路では約10から15 km間隔で設置されている．
+As shown in Figure \ref{fig:itsspot_location}, they are installed on highways throughout Japan at intervals of about 4 km on inner-city highways and about 10 to 15 km on inter-city highways \cite{etc2.0Location}.
+%
+\begin{figure}[tb]
+  \begin{center}
+    \includegraphics[width=1.0\linewidth]{itsspot_location.pdf}
+  \end{center}
+  \caption{Location of ITS spots on highways in Japan}
+  \label{fig:itsspot_location}
+\end{figure}
+%
+% ETC2.0からITSスポットに送信された車両走行情報に基づいて，道路の状況を把握し，ドライバーに運転支援のための様々なサービスを提供する．
+Based on vehicle driving information transmitted from ETC2.0 to ITS spots, the system monitors road conditions and provides various driving assistance services to the driver.
+%
+\par
+%
+% ETC2.0から提供されるサービスとして路上障害物情報がある．
+One of the services provided by ETC2.0 is road obstacle information.
+%
+% 2018年の高速道路での落下物処理件数は31.6万件\cite{obstacles}であり，これは約1分間に1件発生している計算となり，多くのドライバーの安全運転の妨げとなっている．
+In 2018, 316,000 were handled on Japan's highways \cite{obstacles}, which translates to about one occurrence every minute, hindering the safe driving of many drivers.
+%
+% 路上障害物の撤去にはその位置情報が必要になり，現在はドライバーやパトロールの通報によって情報が提供されているため検知のリアルタイム性の確保が困難になっている．
+It is to need information on their location for removing road obstacles.
+%
+Because this information is currently provided by driver and patrol reports, it is difficult to ensure real-time detection.
+%
+\par
+%
+% 検知の自動化を行うため，過去の車載カメラ映像との道路面の差分により障害物検知を行う手法\cite{hisatoku}や，物体検知を行うモデルの1つであるYOLOv3を用いて，障害物の位置や種類を特定する手法\cite{wang2021front}が提案されている．
+The authors proposed two methods to automate obstacle detection.
+%
+The first method relies on the difference of the road surface from previous in-vehicle camera images \cite{hisatoku}, whereas the second one utilizes YOLOv3, an object detection model \cite{wang2021front}, to identify the location and type of obstacles.
+%
+% しかし，これらの手法はカメラを使用しており悪天候時や夜間では検知性能が低下することが懸念される．
+However, these methods use cameras, and there is concern that detection performance may deteriorate in bad weather or at night.
+%
+\par
+%
+% 一方で車両走行情報は，天候や時間帯に依存しないため，検知性能の低下を防ぐことができると考えられる．
+Vehicle driving information is independent of weather and time of day.
+%
+This is expected to prevent the degradation of detection performance.
+%
+% そこで，本稿でETC2.0とITSスポットを介して取得された車両走行情報を用いて障害物検知を行う手法を提案し，既存手法と提案手法の検知性能を比較する．
+Therefore, we propose a method for obstacle detection using vehicle driving information collected via ETC2.0 and ITS spots.
+%
 
 
 \bibliographystyle{ieicetr}% bib style
