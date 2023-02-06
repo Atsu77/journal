@@ -138,6 +138,15 @@ Therefore, in this thesis, the traffic flow simulator SUMO (Simulation of Urban 
 % SUMOとはドイツ航空宇宙センターの輸送システム研究所で作成されたオープンソースのシミュレータであり,各車両の減速値や車線変更などの車両走行情報を取得できる.
 SUMO is an open-source simulator created by the Institute of Transportation Systems at the German Aerospace Center.
 %
+\subsection{Road model}
+\label{sec:road_model}
+%
+% 本研究では，ITSスポットが設置されている高速道路を想定し，道路全長4000 m，片側3車線の一方通行のモデルとし，その間の1000 mを評価区間とした．
+This thesis used a one-way model with a total road length of 4000 m and three lanes in one way, assuming an expressway with ITS spots installed as shown in the figure.
+%
+% 実環境に近い検証を行うため，モデルは道路幅は車線ごとに3.5 m，制限速度を80 〜 100 km/hに設定し，左車線を最優先走行車線とした．
+To verify the model as it would be in a realistic environment, the road width was set to 3.5 m for each lane, the speed limit was set to 80 to 100 km/h, and the left lane was set as the highest priority lane.
+%
 
 
 \bibliographystyle{ieicetr}% bib style
