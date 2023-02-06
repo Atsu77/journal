@@ -147,6 +147,18 @@ This thesis used a one-way model with a total road length of 4000 m and three la
 % 実環境に近い検証を行うため，モデルは道路幅は車線ごとに3.5 m，制限速度を80 〜 100 km/hに設定し，左車線を最優先走行車線とした．
 To verify the model as it would be in a realistic environment, the road width was set to 3.5 m for each lane, the speed limit was set to 80 to 100 km/h, and the left lane was set as the highest priority lane.
 %
+\subsection{Vehicle model}
+\label{sec:vehicle_model}
+%
+% 車両モデルは，主にITSスポットが設置されている高速道路の車種区分\cite{syasyukubun}に基づいて設定した．
+The vehicle model was set up based mainly on the vehicle type classification of the expressway on which the ITS spots are installed \cite{syasyukubun}.
+%
+% 各車両を全長3.5 m，幅1.4 m，最高速度100 km/hと設定し，道路の0 m地点から毎秒1台の車両が任意の車線から発生するようにした．
+Each vehicle was assumed to be 3.5 m long, have a maximum speed of 100 km/h, and was generated from the 0 m point on the road.
+%
+% 前提として，すべての車両はETC2.0車載器を搭載し，評価区間内のすべての車両の車両走行情報を取得できるものとする．
+All vehicles are assumed to be equipped with ETC2.0 onboard equipment capable of acquiring vehicle travel information.
+%
 
 
 \bibliographystyle{ieicetr}% bib style
