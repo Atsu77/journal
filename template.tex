@@ -279,6 +279,40 @@ From the simulation results in the previous section, we confirmed that the tende
 % 本節では，ITSスポットを通して各セルに集積された車両走行情報を用い路上障害物検知を行う手法について説明する．
 This section describes a method for detecting obstacles on the road using vehicle travel information accumulated in each cell through ITS spots.
 %
+\subsection{Flow of obstacle detection}
+\label{sec:flow_of_obstacle_detection}
+%
+% 本研究において，ETC 2.0対応車載器搭載車とITSスポットを用いた路上障害物検知の流れについて説明する．
+In this thesis, the flow of road obstacle detection using vehicles equipped with ETC 2.0 on-board equipment and ITS spots is described.
+%
+% 前提として，ある高速道路にITSスポットが二台設置されており，その間に路上障害物が存在する環境を想定する．
+The assumption is that two ITS spots are installed on a certain highway, and that there is an obstacle on the road between them.
+%
+% またETC 2.0車載器は各時刻において自車両の速度や時刻や位置などの車両走行情報を記録可能であり，各車両が路側に設置されているITSスポットの通信可能範囲に侵入すると，自動的にITSスポットに自車両の走行情報を送信可能である．
+The ETC 2.0 on-board unit can record vehicle travel information such as speed, time, and location at each time point.
+%
+It can automatically transmit vehicle driving information to the ITS spot when a vehicle enters the communication range of the ITS spot installed on the roadside.
+%
+% これらの前提に伴い，車両のプローブ情報を用いた路上障害物の検知の流れについて説明する．
+Along with these assumptions, the flow of road obstacle detection using vehicle driving information is described.
+%
+\par
+%
+% まず，高速道路を走行する車両は，路上障害物や事故車などの突発的なこと象の発生，急カーブ，自車両の前での急な車線変更等がない限り，急激に減速しないと考えられる．
+First, a vehicle traveling on a highway is not expected to decelerate rapidly unless there is an obstacle on the road, an accident, a sharp curve, or a sudden lane change in front of the vehicle.
+%
+% ここで，ある時刻において路上障害物が発生したとする．
+Suppose that a roadside obstacle is encountered at a certain time.
+%
+% このとき，路上障害物と同一の車線を走行している車両は路上障害物を安全に回避するため，その手前で減速や車線変更をする．
+At this time, vehicles traveling in the same lane as the obstacle decelerate or change lanes in front of the obstacle to safely avoid it.
+%
+% これらの障害物回避の車両走行情報もITSスポットに送信される．
+These obstacle avoidance vehicle driving information is also transmitted to the ITS spot.
+%
+% 一定期間ITSスポットに蓄積された，各車両の走行情報を交通管制センターに送信し，交通管制センターで送信された車両走行情報を解析し，後続車に路上障害物情報を提供する．
+The system transmits the vehicle driving information of each vehicle collected at ITS spots for a certain period of time to the traffic control center, which analyzes the transmitted vehicle driving information and provides information about obstacles on the road to following vehicles.
+%
 
 
 \bibliographystyle{ieicetr}% bib style
